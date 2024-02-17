@@ -212,7 +212,7 @@ An example of these tasks mentioned in `tasks.json` is shown below:
 }
 ```
 After these configuration start the debug session by clicking the play button. 
-![Debug_session](image-1.png)
+![Debug_session](images/image-1.png)
 
 ## Notes
 
