@@ -25,8 +25,6 @@ int main(void) {
       GPIOC_ODR = _clrBit(GPIOC_ODR, 13);
       GPIOC_ODR = _clrBit(GPIOC_ODR, 13);
       delay(1000000);
-      x++;
-      y+=x;
   }
 
   return 0;

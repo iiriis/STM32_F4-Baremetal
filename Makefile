@@ -3,6 +3,9 @@ programmer=C:/Program\ Files/STMicroelectronics/STM32Cube/STM32CubeProgrammer/bi
 CC = arm-none-eabi-gcc
 CC_CPU = cortex-m4
 CC_FLAGS = -Wall -fstack-usage -mthumb -ffunction-sections -fdata-sections -fanalyzer -g
+CC_DEBUGGER = gdb-multiarch
+OPENOCD = openocd
+TARGET = stm32f4x
 #-fcyclomatic-complexity
 
 LD_FLAGS = -Wl,--gc-sections
@@ -31,29 +34,25 @@ $(OBJ_DIRECTORY)%.o:$(SRC_DIRECTORY)%.c
 	$(CC) -mcpu=$(CC_CPU) $(CC_FLAGS) $< -c -o $@ -I$(INC_DIRECTORY)
 
 flash: build
-	openocd -f interface/stlink.cfg -f target/stm32f4x.cfg -c "init; reset init; program $(APP_DIRECTORY)/$(APP_NAME); reset; shutdown"
-
-show_flash_info:
-	openocd -f interface/stlink.cfg -f target/stm32f4x.cfg -c "init; reset init; flash info 0; reset; shutdown"
+	$(OPENOCD) -f interface/stlink.cfg -f target/$(TARGET).cfg -c "init; reset init; program $(APP_DIRECTORY)/$(APP_NAME); reset; shutdown"
 
 erase:
-	openocd -f interface/stlink.cfg -f target/stm32f4x.cfg -c "init; reset init; flash info 0; reset; shutdown"
+	$(OPENOCD) -f interface/stlink.cfg -f target/$(TARGET).cfg -c "init; reset init; stm32f4x mass_erase 0; reset; shutdown"
 
-debug:
+debug: build
 # Start OpenOCD in the background, redirecting output to null to keep the terminal clean
 	@echo "Starting OpenOCD..."
-	@openocd -s scripts -f interface/stlink.cfg -f target/stm32f4x.cfg &
+	@$(OPENOCD) -f interface/stlink.cfg -f target/$(TARGET).cfg 2>&1 >/dev/null & echo $$! > openocd.pid
     # Give OpenOCD time to start
 	@sleep 2
     # Start arm-none-eabi-gdb and connect to OpenOCD
 	@echo "Starting GDB..."
-	@gdb-multiarch ./build/firmware.elf -ex "target remote localhost:3333" -ex "monitor reset halt" -ex "load" -ex "monitor reset init" -ex "b main" -ex "continue"
+	@$(CC_DEBUGGER) $(APP_DIRECTORY)/$(APP_NAME) -x gdb-config.gdb
+	@kill $$(cat openocd.pid) && rm -f openocd.pid
 	
-
 
 program: build
 	$(programmer)/STM32_Programmer_CLI -c port=USB1 -w firmware.elf 0x08000000
-# /cygdrive/c/Program\ Files/STMicroelectronics/STM32Cube/STM32CubeProgrammer/bin/STM32_Programmer_CLI -c port=USB1 -w firmware.elf 0x08000000
 
 clean:
 	@rm -rf $(OBJ_DIRECTORY)/*
