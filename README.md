@@ -212,6 +212,7 @@ An example of these tasks mentioned in `tasks.json` is shown below:
 }
 ```
 After these configuration start the debug session by clicking the play button. 
+
 ![Debug_session](images/image-1.png)
 
 ## Notes
@@ -221,3 +222,9 @@ After these configuration start the debug session by clicking the play button.
 - Modify the OpenOCD configuration file paths to match your setup.
 
 With this repository, you'll have the resources to program, flash, and debug STM32F4 MCU effectively using VS Code as an integrated development environment.
+
+## MISC
+There is a powerful feature in cortex M4 device called [Bit-Banding](https://developer.arm.com/documentation/ddi0439/b/Programmers-Model/Bit-banding). With this feature, the address space gets bit-addressable. Very useful in atomic operations. An example of setting bits in GPIO register is given in [Main.c](src/main.c)
+Ref the image to for a quick understanding.
+
+![Bit Banding](images/bit_banding.png).
