@@ -13,17 +13,15 @@ int main(void) {
 
   configureSystemClock();
   GPIO_Init();
-  int x = 0;
-  uint64_t y = 20;
-  char *ptr = arr;
 
   for(;;)
   {
       memcpy(arr, "Hello", 5);
       GPIOC_ODR = _setBit(GPIOC_ODR, 13);
+      // *(volatile uint32_t*)(PERI_BB_ADDRESS_FROM_ABS_ADDRESS(GPIOC_BASE_ADDR + 0x14, 13)) = 1; //using bit addressble locations
       delay(1000000);
       GPIOC_ODR = _clrBit(GPIOC_ODR, 13);
-      GPIOC_ODR = _clrBit(GPIOC_ODR, 13);
+      // *(volatile uint32_t*)(PERI_BB_ADDRESS_FROM_ABS_ADDRESS(GPIOC_BASE_ADDR + 0x14, 13)) = 0; //using bit addressble locations
       delay(1000000);
   }
 
