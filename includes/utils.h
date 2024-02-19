@@ -13,5 +13,5 @@
 
 /*Bit Banding operations*/
 #define SRAM_BB_ADDRESS_FROM_ABS_ADDRESS(var, bit) (SRAM_BB_BASE + (((var) ^ SRAM_BASE) << 5) + (bit << 2))
-#define SRAM_BB_ADDRESS_FROM_VAR(var, bit) (SRAM_BB_BASE + (((uint32_t)&(varz)) ^ SRAM_BASE << 5) + (bit << 2))
+#define SRAM_BB_ADDRESS_FROM_VAR(var, bit) (SRAM_BB_BASE + (((uint32_t)&(var)) ^ SRAM_BASE << 5) + (bit << 2))
 #define PERI_BB_ADDRESS_FROM_ABS_ADDRESS(var, bit) (PERI_BB_BASE + (((var) ^ PERI_BASE) << 5) + (bit << 2))
