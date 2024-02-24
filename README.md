@@ -138,7 +138,7 @@ The `launch.json` file specifies the debugger settings and launch configurations
       "type": "gdb",
       "request": "attach",
       "cwd": "${workspaceRoot}",
-      "executable": "${workspaceRoot}/build/firmware.elf",
+      "executable": "${workspaceRoot}/build/binaries/firmware.elf", /* path to your firmware */
       "remote": true,
       "target": "localhost:3333",
       "gdbpath": "gdb-multiarch",
