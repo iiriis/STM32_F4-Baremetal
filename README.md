@@ -27,30 +27,35 @@ Our project provides basic register definitions for the [STM32F401CCU MCU](https
 
 The linker script defines the memory layout for your program. It specifies the flash and RAM sizes and dictates where sections like `.text`, `.bss`, and `.data` should be placed.
 
-### The Reset Handler
+### The Startup Code
 
-The reset handler is responsible for initializing the `.bss` section to zeros and copying the `.data` section to the RAM region. It also initializes the reset vectors and calls the `main` function. If `main` returns, the handler enters an infinite loop to prevent undefined behavior. Below is a basic reset handler:
+This code runs before your main. This section must include the vector table and the rest handler. The reset handler is responsible for initializing the `.bss` section to zeros and copying the `.data` section to the RAM region. It calls the `main` function. If `main` returns, the handler enters an infinite loop to prevent undefined behavior. Below is a basic reset handler:
 ```C
-#include <stdint.h>
+#include <main.h>
+#include <string.h>
 
-int main(void);
+extern uint32_t _MSP;  // Defined in link.ld
 
-__attribute__((naked, noreturn)) void _reset(void) {
-  // memset .bss to zero, and copy .data section to RAM region
-  extern long _sbss, _ebss, _sdata, _edata, _sidata;
-  for (long *src = &_sbss; src < &_ebss; src++) *src = 0;
-  for (long *src = &_sdata, *dst = &_sidata; src < &_edata;) *src++ = *dst++;
+void Reset_Handler(void) {
 
-  main();             // Call main()
-  for (;;) (void) 0;  // Infinite loop in the case if main() returns
+    extern uint8_t __data_start__, __data_end__, __data_FLASH_end__, __bss_start__, __bss_end__;
+
+    /* Copy the .data from flash to RAM */
+    memcpy(&__data_start__, &__data_FLASH_end__, (uint32_t)(&__data_end__ - &__data_start__));
+    /* Fill the .bss section in RAM with all Zeros */
+    memset(&__bss_start__, 0, (uint32_t)(&__bss_end__ - &__bss_start__));
+
+    main();
+    for(;;);
 }
 
-
-extern void _estack(void);  // Defined in link.ld
-
-// 16 standard and 91 STM32-specific handlers
-__attribute__((section(".vectors"))) void (*tab[16 + 91])(void) = {_estack, _reset};
+__attribute__((section(".isr_vector"), used)) uint32_t vector_table [] = {
+    (uint32_t)&_MSP,
+    (uint32_t)&Reset_Handler,
+};
 ```
+Notice there is only two IRQ handler in the vector table, the MSP is not a an error handler but the vector table expects it's first element to be the MSP. 
+
 ### Building the Project
 
 To build the project, we use a Makefile that automates the compilation and linking process. Manually compiling numerous files would be impractical; therefore, the Makefile is essential.
