@@ -33,7 +33,7 @@ SECTIONS
 
   .rodata :
   {
-    *(.rodata)
+    *(.rodata*)
   } > FLASH
 
   .ARM.exidx :
@@ -43,18 +43,23 @@ SECTIONS
 
   .data : 
   {
+    . = ALIGN(4);
     __data_start__ = .;
     *(.data*)
     __data_end__   = .;
+    . = ALIGN(4);
   } > SRAM AT> FLASH
-
   __data_FLASH_start__ = LOADADDR(.data);
 
   .bss :
   {
+    . = ALIGN(4);
     __bss_start__ = .;
     *(.bss*)
     __bss_end__ = .;
+    _end = .; /* this is provided for the _sbrk to provide end of statically allocated memory so that heap can start */
+    end = .;  /* this is provided for the _sbrk to provide end of statically allocated memory so that heap can start */
+    . = ALIGN(4);
   } > SRAM
 
 }
