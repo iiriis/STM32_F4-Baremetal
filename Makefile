@@ -4,10 +4,10 @@ CC = arm-none-eabi-gcc
 CC_CPU = cortex-m4
 FPU_FLAGS = -mfloat-abi=hard -mfpu=fpv4-sp-d16 -Wdouble-promotion -Wfloat-conversion -fsingle-precision-constant
 OPTIMIZATION_FLAGS = -flto -O3
-CC_FLAGS = -Wall -Wpedantic -Wextra -fstack-usage -mthumb -ffunction-sections -fdata-sections -fanalyzer  $(FPU_FLAGS) -g3 $(OPTIMIZATION_FLAGS) --specs=nano.specs -MMD -MP
+CC_FLAGS = -Wall -Wpedantic -Wextra -fstack-usage -mthumb -ffunction-sections -fdata-sections -fanalyzer  $(FPU_FLAGS) -g3 $(OPTIMIZATION_FLAGS)
 #-fcyclomatic-complexity
 
-LD_FLAGS = -Wl,--gc-sections -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 $(OPTIMIZATION_FLAGS) -Wl,--print-memory-usage  -static --specs=nano.specs  -Wl,--start-group -lc -lm -Wl,--end-group
+LD_FLAGS = -Wl,--gc-sections -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 $(OPTIMIZATION_FLAGS) -Wl,--print-memory-usage  
 LINKER_SCRIPT = ./linker.ld
 
 APP_DIRECTORY = ./build/binaries
@@ -23,8 +23,8 @@ OBJ = $(subst $(SRC_DIRECTORY),$(OBJ_DIRECTORY),$(SRC:.c=.o))
 INC_DIRECTORY = ./includes
 # INCLUDES = $(subst $(SRC_DIRECTORY),$(INC_DIRECTORY),$(SRC:.c=.h))
 
-.PHONY: build
-build:$(OBJ) 
+.PHONY: configure build
+build: configure $(OBJ) 
 	@echo Linking... 
 	@$(CC) -mcpu=$(CC_CPU) $(LD_FLAGS) $(OBJ) -o $(APP_DIRECTORY)/$(APP_NAME).elf -Wl,-T$(LINKER_SCRIPT) -Wl,-Map=$(APP_DIRECTORY)/$(APP_NAME).map
 	@arm-none-eabi-objcopy -O ihex $(APP_DIRECTORY)/$(APP_NAME).elf $(APP_DIRECTORY)/$(APP_NAME).hex
@@ -35,6 +35,9 @@ build:$(OBJ)
 
 $(OBJ_DIRECTORY)%.o:$(SRC_DIRECTORY)%.c
 	$(CC) -mcpu=$(CC_CPU) $(CC_FLAGS) $< -c -o $@ -I$(INC_DIRECTORY)
+
+configure:
+	@mkdir -p $(OBJ_DIRECTORY) $(APP_DIRECTORY)
 
 flash: build
 	openocd -f interface/stlink.cfg -f target/stm32f4x.cfg -c "init; reset init; program $(APP_DIRECTORY)/$(APP_NAME).elf; reset; shutdown"
