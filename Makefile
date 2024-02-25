@@ -3,11 +3,11 @@ programmer=C:/Program\ Files/STMicroelectronics/STM32Cube/STM32CubeProgrammer/bi
 CC = arm-none-eabi-gcc
 CC_CPU = cortex-m4
 FPU_FLAGS = -mfloat-abi=hard -mfpu=fpv4-sp-d16 -Wdouble-promotion -Wfloat-conversion -fsingle-precision-constant
-OPTIMIZATION_FLAGS = -flto -O3
-CC_FLAGS = -Wall -Wpedantic -Wextra -fstack-usage -mthumb -ffunction-sections -fdata-sections -fanalyzer  $(FPU_FLAGS) -g3 $(OPTIMIZATION_FLAGS)
+OPTIMIZATION_FLAGS = -flto -O3 -specs=nano.specs -specs=nosys.specs
+CC_FLAGS = -std=gnu11 -Wall -Wpedantic -Wextra -fstack-usage -mthumb -ffunction-sections -fdata-sections -fanalyzer  $(FPU_FLAGS) -g3 $(OPTIMIZATION_FLAGS) 
 #-fcyclomatic-complexity
 
-LD_FLAGS = -Wl,--gc-sections -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 $(OPTIMIZATION_FLAGS) -Wl,--print-memory-usage  
+LD_FLAGS = -Wl,--gc-sections -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 $(OPTIMIZATION_FLAGS) -Wl,--print-memory-usage -Wl,--start-group -lc -lm -Wl,--end-group
 LINKER_SCRIPT = ./linker.ld
 
 APP_DIRECTORY = ./build/binaries
@@ -48,7 +48,7 @@ show_flash_info:
 erase:
 	openocd -f interface/stlink.cfg -f target/stm32f4x.cfg -c "init; reset init; stm32f4x mass_erase 0; reset; shutdown"
 
-
+.PHONY: debug
 debug: build
 # Start OpenOCD in the background, redirecting output to null to keep the terminal clean
 	@echo "Starting OpenOCD..."
@@ -59,8 +59,7 @@ debug: build
     # Start arm-none-eabi-gdb and connect to OpenOCD
 	@echo "Starting GDB..."
 	@gdb-multiarch $(APP_DIRECTORY)/$(APP_NAME).elf -x ./gdb-config.gdb
-	@kill $$(cat openocd.pid)
-	@rm -f openocd.pid
+	@kill $$(cat openocd.pid) && rm -f openocd.pid
 	
 .PHONY: mem_report
 mem_report:
