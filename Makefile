@@ -59,7 +59,8 @@ debug: build
     # Start arm-none-eabi-gdb and connect to OpenOCD
 	@echo "Starting GDB..."
 	@gdb-multiarch $(APP_DIRECTORY)/$(APP_NAME).elf -x ./gdb-config.gdb
-	@kill $$(cat openocd.pid) && rm -f openocd.pid
+	@kill $$(cat openocd.pid)
+	@rm -f openocd.pid
 	
 .PHONY: mem_report
 mem_report:
