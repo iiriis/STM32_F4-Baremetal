@@ -17,7 +17,18 @@ SECTIONS
 
   .text :
   {
-    *(.text)
+    /* *(.text) */
+    *(.text*)
+  } > FLASH
+
+  .init : 
+  {
+    *(.init)
+  } > FLASH
+
+  .fini : 
+  {
+    *(.fini)
   } > FLASH
 
   .rodata :
@@ -25,18 +36,25 @@ SECTIONS
     *(.rodata)
   } > FLASH
 
+  .ARM.exidx :
+  {
+    *(.ARM.exidx*)
+  } > FLASH
+
   .data : 
   {
     __data_start__ = .;
-    *(.data)
+    *(.data*)
     __data_end__   = .;
-    __data_FLASH_end__ = LOADADDR(.data);
   } > SRAM AT> FLASH
+
+  __data_FLASH_start__ = LOADADDR(.data);
 
   .bss :
   {
     __bss_start__ = .;
-    *(.bss)
+    *(.bss*)
     __bss_end__ = .;
   } > SRAM
+
 }
