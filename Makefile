@@ -3,7 +3,7 @@ programmer=C:/Program\ Files/STMicroelectronics/STM32Cube/STM32CubeProgrammer/bi
 CC = arm-none-eabi-gcc
 CC_CPU = cortex-m4
 FPU_FLAGS = -mfloat-abi=hard -mfpu=fpv4-sp-d16 -Wdouble-promotion -Wfloat-conversion -fsingle-precision-constant
-OPTIMIZATION_FLAGS = -flto -O3 -specs=nano.specs -specs=nosys.specs
+OPTIMIZATION_FLAGS = -flto -O3 #-specs=nano.specs -specs=nosys.specs #enable this if you are using stdio functions
 CC_FLAGS = -std=gnu11 -Wall -Wpedantic -Wextra -fstack-usage -mthumb -ffunction-sections -fdata-sections -fanalyzer  $(FPU_FLAGS) -g3 $(OPTIMIZATION_FLAGS) 
 #-fcyclomatic-complexity
 
