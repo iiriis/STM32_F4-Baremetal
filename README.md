@@ -132,34 +132,66 @@ make debug
 
 Integrating OpenOCD with VS Code requires configuring the `launch.json` and `tasks.json` files in the `.vscode` directory. 
 
-<NOTE:> Native Debugging extension must be enabled for this debug session.
 
-The `launch.json` file specifies the debugger settings and launch configurations, while the `tasks.json` file defines tasks for building the project, starting/stopping OpenOCD, and any other pre- or post-build steps necessary.
+The `launch.json` file specifies the debugger settings and launch configurations, while the `tasks.json` file defines tasks for building the project, starting/stopping OpenOCD, and any other pre- or post-build steps necessary. 
+To startup 
+1.  Open the OpenOCD
+2.  launch the GDB, note that the debugger path is changed to the `gdb-multiarch` and the startup commands are added in the setup commands.
+A reference example is shown below.
 
 #### launch.json
 ```json
     {
-      "name": "(gdb) Debug",
-      "type": "gdb",
+      "name": "(gdb) m4-debug",
+      "type": "cppdbg",
       "request": "launch",
+      "program": "${workspaceRoot}/build/binaries/firmware.elf",
+      "args": [],
+      "stopAtEntry": true,
       "cwd": "${workspaceRoot}",
-      "target": "${workspaceRoot}/build/binaries/firmware.elf", //path to your firmware.elf
-      "gdbpath": "gdb-multiarch",
-      "autorun": [
-        "target extended-remote :3333",
-        "monitor reset halt",
-        "load",
-        "b Reset_Handler",
-        "b main",
-        "monitor reset init"
-      ],
+      "environment": [],
+      "externalConsole": false,
+      "MIMode": "gdb",
+      "miDebuggerPath": "gdb-multiarch",
       "preLaunchTask": "Prepare for Debug",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        },
+        {
+          "description": "Set Disassembly Flavor to Intel",
+          "text": "-gdb-set disassembly-flavor intel",
+          "ignoreFailures": true
+        },
+        {
+          "description": "Connect to Target",
+          "text": "target extended-remote :3333",
+          "ignoreFailures": true
+        },
+        {
+          "description": "Halt Target",
+          "text": "monitor reset halt",
+          "ignoreFailures": true
+        },
+        {
+          "description": "Load",
+          "text": "load",
+          "ignoreFailures": true
+        },
+        {
+          "description": "Reset Target",
+          "text": "monitor reset init",
+          "ignoreFailures": true
+        }
+      ],
       "postDebugTask": "Kill OpenOCD"
     },
 ```
 
 #### tasks.json
-Now the `preLaunchTask` needs to be defined that will contain the perquisites required to enable the debug for example starting the openOCD server and building the project.
+Now the `preLaunchTask` needs to be defined that will contain the perquisites required to enable the debug for example building the project and starting the openOCD server.
 Similarly, a `postDebugTask` is also required that will terminate the openOCD.
 An example of these tasks mentioned in `tasks.json` is shown below:
 
