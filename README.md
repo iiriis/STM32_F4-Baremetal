@@ -141,16 +141,17 @@ The `launch.json` file specifies the debugger settings and launch configurations
     {
       "name": "(gdb) Debug",
       "type": "gdb",
-      "request": "attach",
+      "request": "launch",
       "cwd": "${workspaceRoot}",
-      "executable": "${workspaceRoot}/build/binaries/firmware.elf", /* path to your firmware */
-      "remote": true,
-      "target": "localhost:3333",
+      "target": "${workspaceRoot}/build/binaries/firmware.elf", //path to your firmware.elf
       "gdbpath": "gdb-multiarch",
       "autorun": [
-        "monitor reset init",
+        "target extended-remote :3333",
+        "monitor reset halt",
         "load",
-        "monitor reset halt"
+        "b Reset_Handler",
+        "b main",
+        "monitor reset init"
       ],
       "preLaunchTask": "Prepare for Debug",
       "postDebugTask": "Kill OpenOCD"
