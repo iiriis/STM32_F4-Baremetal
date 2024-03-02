@@ -5,8 +5,10 @@ MEMORY {
   SRAM(rwx) : ORIGIN = 0x20000000, LENGTH = 64k  /* remaining 64k in a separate address space */
 }
 
-_MSP = ORIGIN(SRAM) + LENGTH(SRAM) - 1;
+_MSP = ORIGIN(SRAM) + LENGTH(SRAM);
 
+_stack_size = 30k;
+_heap_size = 2k;
 
 SECTIONS
 {
@@ -17,7 +19,8 @@ SECTIONS
 
   .text :
   {
-    /* *(.text) */
+    /* this will show individual text sections like text.xx */
+    /* *(.text) */ 
     *(.text*)
   } > FLASH
 
@@ -46,8 +49,8 @@ SECTIONS
     . = ALIGN(4);
     __data_start__ = .;
     *(.data*)
-    __data_end__   = .;
     . = ALIGN(4);
+    __data_end__   = .;
   } > SRAM AT> FLASH
   __data_FLASH_start__ = LOADADDR(.data);
 
@@ -57,9 +60,19 @@ SECTIONS
     __bss_start__ = .;
     *(.bss*)
     __bss_end__ = .;
+    . = ALIGN(4);
     _end = .; /* this is provided for the _sbrk to provide end of statically allocated memory so that heap can start */
     end = .;  /* this is provided for the _sbrk to provide end of statically allocated memory so that heap can start */
-    . = ALIGN(4);
   } > SRAM
 
+  .heap :
+  {
+    . = ALIGN(4);
+    _heap_start = .;
+    . = . + _heap_size;
+    . = ALIGN(4);
+  } > SRAM  
+
 }
+
+ASSERT(((_heap_start + _heap_size) <= (_MSP - _stack_size)), "Heap and Stack may collide !!!");
