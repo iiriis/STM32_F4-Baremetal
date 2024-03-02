@@ -1,5 +1,6 @@
 #include <main.h>
 #include <string.h>
+#include <__startup.h>
 
 extern uint32_t _MSP;  // Defined in link.ld
 
@@ -18,4 +19,10 @@ void Reset_Handler(void) {
 __attribute__((section(".isr_vector"))) volatile uint32_t vector_table [] = {
     (uint32_t)&_MSP,
     (uint32_t)&Reset_Handler,
+    (uint32_t)&NMI_Handler,
 };
+
+void Default_Handler(void)
+{
+  while(1);
+}
