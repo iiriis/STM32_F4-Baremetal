@@ -4,7 +4,7 @@ This repository is dedicated to the basics of STM32 baremetal programming, inclu
 
 ## Contents
 
-- Example of STM32 baremetal programs.
+- Setting up of STM32 for baremetal programs.
 - Scripts and configurations for building and flashing STM32 firmware.
 - Instructions for using OpenOCD
 - `launch.json` and `tasks.json` configurations for setting up debugging in VS Code.
@@ -13,6 +13,9 @@ This repository is dedicated to the basics of STM32 baremetal programming, inclu
 ## Getting Started with STM32 Baremetal Programming
 
 Baremetal programming involves writing code that interacts directly with hardware at a low level. This repository includes sample code that demonstrates how to control STM32 hardware registers, allowing you to perform basic operations such as blinking an LED.
+Below is a basic setup consisting of a Black Pill device featuring a cortex-M4 STM32F401CCU. A basic STLINK-V2 clone is used as a debugger and programmer. Check the connection  diagram that we will be using throughout.
+
+![connection_Diagram](images/connection_Diagram.png)
 
 ### Installing Toolchain
 Install `arm-none-eabi-gcc` toolchain. We are going to use this to build our project. <br>
