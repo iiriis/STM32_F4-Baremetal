@@ -2,12 +2,18 @@ name: Build STM32F4 Project
 
 # Trigger the workflow on push or pull request to the main branch
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+    push:
+      branches:
+        - main
+      paths:
+        - '**/*.c'
+        - '**/*.h'
+    pull_request:
+      branches:
+        - main
+      paths:
+        - '**/*.c'
+        - '**/*.h'  
 
 jobs:
   build:
