@@ -76,8 +76,8 @@ clean_build:
 	@make build --no-print-directory
 
 
-program: build
-	$(programmer)/STM32_Programmer_CLI -c port=USB1 -w firmware.elf 0x08000000
+# program: build
+# 	$(programmer)/STM32_Programmer_CLI -c port=USB1 -w firmware.elf 0x08000000
 # /cygdrive/c/Program\ Files/STMicroelectronics/STM32Cube/STM32CubeProgrammer/bin/STM32_Programmer_CLI -c port=USB1 -w firmware.elf 0x08000000
 
 clean:
