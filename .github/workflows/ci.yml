@@ -42,7 +42,7 @@ jobs:
     # Step 4: Check if the build artifact exists and print status
     - name: Check build artifacts
       run: |
-        if [ -f build/binaries/firmware.bin ]; then
+        if [ -f build/binaries/firmware.elf ]; then
           echo "Build successful!"
         else
           echo "Build failed!" && exit 1
