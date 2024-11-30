@@ -22,7 +22,7 @@ __always_inline void enableFPU(){
 }
 #endif
 
-// int main(void) {
+int main(void) {
 
   enableFPU();
   GPIO_Init();
