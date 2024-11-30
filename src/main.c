@@ -38,10 +38,10 @@ int main(void) {
       /* blink led on pin C13 */
       GPIOC_ODR = _setBit(GPIOC_ODR, 13);
       // *(volatile uint32_t*)(PERI_BB_ADDRESS_FROM_ABS_ADDRESS(GPIOC_BASE_ADDR + 0x14, 13)) = 1; //using bit addressble locations
-      delay(1000000);
+      delay(100000);
       GPIOC_ODR = _clrBit(GPIOC_ODR, 13);
       // *(volatile uint32_t*)(PERI_BB_ADDRESS_FROM_ABS_ADDRESS(GPIOC_BASE_ADDR + 0x14, 13)) = 0; //using bit addressble locations
-      delay(1000000);
+      delay(100000);
   }
 
   return 0;
