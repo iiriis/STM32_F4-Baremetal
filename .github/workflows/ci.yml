@@ -32,7 +32,7 @@ jobs:
 
     - name: Check build artifacts
       run: |
-        if [ -f build/firmware.elf ]; then
+        if [ -f build/binaries/firmware.elf ]; then
             echo "Build successful!"
         else
             echo "Build failed!" && exit 1
