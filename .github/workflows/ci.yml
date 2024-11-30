@@ -11,29 +11,39 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest  # You can change this to any supported runner
+    runs-on: ubuntu-latest  # Runner environment
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
 
+    # Step 1: Cache ARM toolchain to speed up future builds
+    - name: Cache ARM toolchain
+      uses: actions/cache@v2
+      with:
+        path: /usr/local/bin/gcc-arm-none-eabi
+        key: ${{ runner.os }}-gcc-arm-none-eabi-toolchain
+        restore-keys: |
+          ${{ runner.os }}-gcc-arm-none-eabi-toolchain
+
+    # Step 2: Install ARM toolchain if not already cached
     - name: Set up ARM toolchain
       run: |
-        sudo apt-get update
-        sudo apt-get install -y gcc-arm-none-eabi make
+        if [ ! -f /usr/local/bin/gcc-arm-none-eabi ]; then
+          sudo apt-get update
+          sudo apt-get install -y gcc-arm-none-eabi make
+        fi
 
+    # Step 3: Build the STM32 project
     - name: Build STM32 project
       run: |
-        make  # or replace with cmake if your project uses CMake
+        make  # Replace with cmake if your project uses CMake
 
-    - name: Check build artifacts
-      if: success()
-      run: echo "Build successful!"
-
+    # Step 4: Check if the build artifact exists and print status
     - name: Check build artifacts
       run: |
-        if [ -f build/binaries/firmware.elf ]; then
-            echo "Build successful!"
+        if [ -f build/binaries/firmware.bin ]; then
+          echo "Build successful!"
         else
-            echo "Build failed!" && exit 1
+          echo "Build failed!" && exit 1
         fi
