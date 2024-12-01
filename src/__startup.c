@@ -17,7 +17,7 @@ void Reset_Handler(void) {
 }
 
 __attribute__((section(".isr_vector"))) volatile uint32_t vector_table [] = {
-    (uint32_t)&_MSP,
+    (uint32_t)(&_MSP),
     (uint32_t)&Reset_Handler,
     (uint32_t)&NMI_Handler,
 };
