@@ -1,9 +1,8 @@
-
 #include "main.h"
 #include "rcc.h"
 #include "gpio.h"
 #include "utils.h"
-#include "string.h"
+#include <string.h>
 
 void delay(uint64_t del);
 

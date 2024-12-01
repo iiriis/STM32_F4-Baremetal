@@ -1,5 +1,6 @@
 # general
 .vscode
+compile_commands.json
 
 # Prerequisites
 *.d

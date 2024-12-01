@@ -1,4 +1,4 @@
-
+#include <sys/cdefs.h>
 
 void Reset_Handler(void);
 __weak_symbol __attribute__((alias("Default_Handler"))) void NMI_Handler(void);

@@ -1,11 +1,11 @@
-programmer=C:/Program\ Files/STMicroelectronics/STM32Cube/STM32CubeProgrammer/bin
 
 CC = arm-none-eabi-gcc
+CC_INCLUDES_DIR = C:/msys64/mingw64/arm-none-eabi/include/
 CC_CPU = cortex-m4
 FPU_FLAGS = -mfloat-abi=hard -mfpu=fpv4-sp-d16 -Wdouble-promotion -Wfloat-conversion -fsingle-precision-constant
 OPTIMIZATION_FLAGS = -flto -Og -specs=nano.specs #-specs=nosys.specs #enable this if you are using stdio functions
 CC_FLAGS = -std=gnu11 -Wall -Wpedantic -Wextra -fstack-usage -mthumb -ffunction-sections -fdata-sections -fanalyzer  $(FPU_FLAGS) -g3 $(OPTIMIZATION_FLAGS) 
-#-fcyclomatic-complexity
+
 
 LD_FLAGS = -Wl,--gc-sections -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 $(OPTIMIZATION_FLAGS) -Wl,--print-memory-usage -Wl,--start-group -lc -lm -Wl,--end-group
 LINKER_SCRIPT = ./linker.ld
@@ -38,6 +38,9 @@ $(OBJ_DIRECTORY)%.o:$(SRC_DIRECTORY)%.c
 
 configure:
 	@mkdir -p $(OBJ_DIRECTORY) $(APP_DIRECTORY)
+
+code_check:
+	clang-tidy.exe src/* --extra-arg="-m32" -- -I $(INC_DIRECTORY) -I $(CC_INCLUDES_DIR) 
 
 flash: build
 	openocd -f interface/stlink.cfg -f target/stm32f4x.cfg -c "init; reset init; program $(APP_DIRECTORY)/$(APP_NAME).elf; reset; shutdown"
