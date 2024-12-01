@@ -33,17 +33,17 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  14 .debug_aranges 00000060  00000000  00000000  00001ed8  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 15 .debug_line   00000614  00000000  00000000  00001f38  2**0
+ 15 .debug_line   00000600  00000000  00000000  00001f38  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 16 .debug_str    00007bf9  00000000  00000000  0000254c  2**0
+ 16 .debug_str    00007b6a  00000000  00000000  00002538  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_frame  000000a0  00000000  00000000  0000a148  2**2
+ 17 .debug_frame  000000a0  00000000  00000000  0000a0a4  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_rnglists 00000022  00000000  00000000  0000a1e8  2**0
+ 18 .debug_rnglists 00000022  00000000  00000000  0000a144  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .debug_macro  00001cda  00000000  00000000  0000a20a  2**0
+ 19 .debug_macro  00001c80  00000000  00000000  0000a166  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 20 .debug_line_str 00000275  00000000  00000000  0000bee4  2**0
+ 20 .debug_line_str 00000261  00000000  00000000  0000bde6  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -179,7 +179,7 @@ void delay(uint64_t del)
   while(del)
  8000114:	e003      	b.n	800011e <delay+0xa>
   {
-    asm("nop");
+    __asm__("nop");
  8000116:	bf00      	nop
     del--;
  8000118:	3801      	subs	r0, #1
@@ -194,17 +194,17 @@ void delay(uint64_t del)
 int main(void) {
  8000126:	b580      	push	{r7, lr}
  8000128:	b082      	sub	sp, #8
-  asm("LDR.W R0, =0xE000ED88");
+  __asm__("LDR.W R0, =0xE000ED88");
  800012a:	f8df 00bc 	ldr.w	r0, [pc, #188]	@ 80001e8 <Reset_Handler+0x34>
-  asm("LDR R1, [R0]");
+  __asm__("LDR R1, [R0]");
  800012e:	6801      	ldr	r1, [r0, #0]
-  asm("ORR R1, R1, #(0xF << 20)");
+  __asm__("ORR R1, R1, #(0xF << 20)");
  8000130:	f441 0170 	orr.w	r1, r1, #15728640	@ 0xf00000
-  asm("STR R1, [R0]");
+  __asm__("STR R1, [R0]");
  8000134:	6001      	str	r1, [r0, #0]
-  asm("DSB");
+  __asm__("DSB");
  8000136:	f3bf 8f4f 	dsb	sy
-  asm("ISB");
+  __asm__("ISB");
  800013a:	f3bf 8f6f 	isb	sy
   GPIO_Init();
  800013e:	f7ff ffb8 	bl	80000b2 <GPIO_Init>
@@ -265,15 +265,15 @@ int main(void) {
  80001ba:	1a12      	subs	r2, r2, r0
  80001bc:	4907      	ldr	r1, [pc, #28]	@ (80001dc <Reset_Handler+0x28>)
  80001be:	f000 f815 	bl	80001ec <memcpy>
-  memset(&__bss_start__, 0, (uint32_t)(&__bss_end__ - &__bss_start__) + 10);
+  memset(&__bss_start__, 0, (uint32_t)(&__bss_end__ - &__bss_start__));
  80001c2:	4807      	ldr	r0, [pc, #28]	@ (80001e0 <Reset_Handler+0x2c>)
  80001c4:	4a07      	ldr	r2, [pc, #28]	@ (80001e4 <Reset_Handler+0x30>)
  80001c6:	1a12      	subs	r2, r2, r0
- 80001c8:	320a      	adds	r2, #10
- 80001ca:	2100      	movs	r1, #0
- 80001cc:	f7ff ff1e 	bl	800000c <memset>
+ 80001c8:	2100      	movs	r1, #0
+ 80001ca:	f7ff ff1f 	bl	800000c <memset>
   main();
- 80001d0:	f7ff ffa9 	bl	8000126 <main>
+ 80001ce:	f7ff ffaa 	bl	8000126 <main>
+ 80001d2:	bf00      	nop
  80001d4:	20000000 	.word	0x20000000
  80001d8:	20000000 	.word	0x20000000
  80001dc:	08000338 	.word	0x08000338

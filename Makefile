@@ -4,10 +4,10 @@ CC_INCLUDES_DIR = C:/msys64/mingw64/arm-none-eabi/include/
 CC_CPU = cortex-m4
 FPU_FLAGS = -mfloat-abi=hard -mfpu=fpv4-sp-d16 -Wdouble-promotion -Wfloat-conversion -fsingle-precision-constant
 OPTIMIZATION_FLAGS = -flto -Og -specs=nano.specs #-specs=nosys.specs #enable this if you are using stdio functions
-CC_FLAGS = -std=gnu11 -Wall -Wpedantic -Wextra -fstack-usage -mthumb -ffunction-sections -fdata-sections -fanalyzer  $(FPU_FLAGS) -g3 $(OPTIMIZATION_FLAGS) 
+CC_FLAGS = -std=gnu11 -Wall -Wpedantic -Wextra -fstack-usage -mthumb -ffunction-sections -fdata-sections -fanalyzer  $(FPU_FLAGS) -g3 $(OPTIMIZATION_FLAGS) -std=c11
 
 
-LD_FLAGS = -Wl,--gc-sections -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 $(OPTIMIZATION_FLAGS) -Wl,--print-memory-usage -Wl,--start-group -lc -lm -Wl,--end-group
+LD_FLAGS = -Wl,--gc-sections -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 $(OPTIMIZATION_FLAGS) -Wl,--print-memory-usage -Wl,--start-group -lc -lm -Wl,--end-group -std=c11
 LINKER_SCRIPT = ./linker.ld
 
 APP_DIRECTORY = ./build/binaries

@@ -12,12 +12,12 @@ char arr[5] = {1,2,3,4,5};
 void enableFPU();
 
 __always_inline void enableFPU(){
-  asm("LDR.W R0, =0xE000ED88");
-  asm("LDR R1, [R0]");
-  asm("ORR R1, R1, #(0xF << 20)");
-  asm("STR R1, [R0]");
-  asm("DSB");
-  asm("ISB");
+  __asm__("LDR.W R0, =0xE000ED88");
+  __asm__("LDR R1, [R0]");
+  __asm__("ORR R1, R1, #(0xF << 20)");
+  __asm__("STR R1, [R0]");
+  __asm__("DSB");
+  __asm__("ISB");
 }
 #endif
 
@@ -52,7 +52,7 @@ void delay(uint64_t del)
 {
   while(del)
   {
-    asm("nop");
+    __asm__("nop");
     del--;
   }
 }
